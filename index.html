@@ -306,8 +306,9 @@
     z-index:9999;
     pointer-events:none;
     opacity:1;
-    will-change:transform;
-    transition:transform .95s cubic-bezier(.22,1,.36,1);
+    will-change:transform, opacity;
+    transition: transform .95s cubic-bezier(.22,1,.36,1),
+                opacity .7s ease .15s;
   }
   .intro-logo img{
     display:block;
@@ -317,13 +318,19 @@
   body.intro-active{overflow:hidden;}
   body.intro-active > .hero,
   body.intro-active > main,
-  body.intro-active > footer{opacity:0;}
+  body.intro-active > footer{
+    opacity:0;
+    transition: opacity .85s ease;
+  }
   body.intro-ready > .hero,
   body.intro-ready > main,
-  body.intro-ready > footer{opacity:1; transition:opacity .3s ease;}
-  /* El logo termina alineado con el logo real del encabezado. */
+  body.intro-ready > footer{
+    opacity:1;
+  }
+  /* El logo se mueve hacia el header y se difumina */
   .intro-logo.hide{
     transform:translate(-50%, calc(-50vh + 60px)) scale(.145);
+    opacity:0;
   }
 
 </style>
@@ -477,24 +484,27 @@ render(DATA[hashKey] ? hashKey : 'TUC');
   const intro = document.getElementById('introLogo');
   if(!intro) return;
 
-  const logo = intro.querySelector('img');
   const finish = () => {
     intro.remove();
     document.body.classList.remove('intro-active');
-    document.body.classList.add('intro-ready');
   };
 
   if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.body.classList.remove('intro-active');
+    document.body.classList.add('intro-ready');
     finish();
     return;
   }
 
-  // Se muestra centrado, espera un instante y luego viaja hasta el logo del encabezado.
-  // La página aparece al terminar el movimiento para evitar un salto visual.
+  // Logo centrado → se mueve + se difumina, y al mismo tiempo la página aparece
   requestAnimationFrame(() => {
     setTimeout(() => {
       intro.classList.add('hide');
-      setTimeout(finish, 950);
+      // La página empieza a aparecer casi al mismo tiempo que el logo se difumina
+      document.body.classList.remove('intro-active');
+      document.body.classList.add('intro-ready');
+      // Esperamos a que termine la animación del logo antes de eliminarlo
+      setTimeout(finish, 1000);
     }, 650);
   });
 })();
