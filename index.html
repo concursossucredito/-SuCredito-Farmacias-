@@ -1,105 +1,438 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sucrédito · Farmacias</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sucrédito · Farmacias</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --yellow: #FFEE00;
+    --yellow-deep: #E8D800;
+    --red: #E30613;
+    --red-deep: #B4040E;
+    --ink: #1B1A1E;
+    --ink-soft: #4A4850;
+    --paper: #FFFDF6;
+    --line: rgba(27,26,30,0.12);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.display{
+    font-family:'Archivo Black', 'Inter', sans-serif;
+    font-weight:400;
+    letter-spacing:-0.01em;
+  }
 
-  <style>
-    :root{
-      --yellow:#FFEE00;
-      --ink:#1B1A1E;
+  /* ---------- HERO ---------- */
+  .hero{
+    background:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* Banner superior opcional con el logo */
+  .hero-top{
+    background:var(--yellow);
+    padding:18px 24px;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .hero-inner{
+    width:100%;
+    max-width:1080px;
+    margin:0 auto;
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .brand-logo{
+    display:block;
+    height:52px;
+    width:auto;
+    margin:0;
+  }
+
+  /* El hero se muestra completo, sin recorte ni deformación */
+  .hero-image{
+    display:block;
+    width:100%;
+    height:auto;
+    max-height:none;
+    object-fit:contain;
+    object-position:center;
+  }
+
+  /* Estos elementos ya no se muestran dentro del hero */
+  .eyebrow-pill,
+  .hero h1,
+  .hero p.lede,
+  .hero-card-visual{
+    display:none !important;
+  }
+
+  @media (max-width:600px){
+    .hero-top{
+      padding:13px 18px;
     }
 
-    *{
-      box-sizing:border-box;
-    }
-
-    html,body{
-      margin:0;
-      padding:0;
-      width:100%;
-      min-height:100%;
-      background:#fff;
-    }
-
-    body{
-      font-family:Arial, Helvetica, sans-serif;
-      overflow-x:hidden;
-    }
-
-    /* Banner superior amarillo */
-    .top-banner{
-      width:100%;
-      height:82px;
-      background:var(--yellow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:14px 24px;
-    }
-
-    .top-banner img{
-      display:block;
-      width:auto;
-      height:52px;
+    .brand-logo{
+      height:42px;
       max-width:80%;
-      object-fit:contain;
     }
+  }
 
-    /* Hero: se muestra completo, sin recorte ni deformación */
-    .hero{
-      width:100%;
-      margin:0;
-      padding:0;
-      line-height:0;
-      background:#fff;
-    }
+  /* ---------- PROVINCE SELECTOR ---------- */
+  .selector-wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding: 34px 24px 8px;
+  }
+  .selector-label{
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+    font-weight:700;
+    margin-bottom:14px;
+  }
+  .prov-tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .prov-tab{
+    appearance:none;
+    border:2px solid var(--ink);
+    background:var(--paper);
+    color:var(--ink);
+    padding:12px 20px;
+    border-radius:12px;
+    font-family:'Inter',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+    transition: transform .12s ease, background .12s ease, color .12s ease;
+  }
+  .prov-tab:hover{ transform:translateY(-2px); }
+  .prov-tab.active{
+    background:var(--yellow);
+    border-color:var(--yellow);
+    color:var(--ink);
+  }
+  .prov-tab .count{
+    font-weight:500;
+    opacity:0.7;
+    font-size:13px;
+    margin-left:6px;
+  }
 
-    .hero-image{
-      display:block;
-      width:100%;
-      height:auto;
-      max-width:none;
-      object-fit:contain;
-      object-position:center;
-      image-rendering:auto;
-    }
+  /* ---------- RESULTS ---------- */
+  main{
+    max-width:1080px;
+    margin:0 auto;
+    padding: 26px 24px 90px;
+  }
+  .province-heading{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin: 18px 0 6px;
+  }
+  .province-heading h2{
+    font-size:clamp(1.6rem,4vw,2.3rem);
+    margin:0;
+  }
+  .province-heading .sub{
+    color:var(--ink-soft);
+    font-size:15px;
+  }
 
-    @media (max-width:600px){
-      .top-banner{
-        height:68px;
-        padding:10px 18px;
-      }
+  .promo-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap:18px;
+    margin-top:26px;
+  }
+  .promo-card{
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:#fff;
+    padding:26px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    position:relative;
+    overflow:hidden;
+  }
+  .promo-card::before{
+    content:"";
+    position:absolute;
+    left:0; top:0;
+    width:6px; height:100%;
+    background:var(--yellow);
+  }
+  .cuotas-flag{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    align-self:flex-start;
+    background:var(--yellow);
+    color:var(--ink);
+    padding:10px 16px 10px 14px;
+    border-radius:0 10px 10px 0;
+    margin-left:-22px;
+  }
+  .cuotas-flag .num{
+    font-family:'Archivo Black',sans-serif;
+    font-size:1.6rem;
+    line-height:1;
+  }
+  .cuotas-flag .txt{
+    font-size:12.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.02em;
+    max-width:80px;
+    line-height:1.15;
+  }
+  .chain-logo{
+    display:flex;
+    align-items:center;
+    min-height:64px;
+  }
+  .chain-logo img{
+    max-height:64px;
+    max-width:100%;
+    object-fit:contain;
+  }
+  .chain-logo.dark img{
+    max-height:76px;
+    border-radius:6px;
+  }
+  .chain-tag{
+    display:inline-block;
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    background:rgba(0,0,0,0.045);
+    padding:4px 10px;
+    border-radius:8px;
+    width:fit-content;
+  }
 
-      .top-banner img{
-        height:42px;
-        max-width:85%;
-      }
+  footer{
+    background:var(--ink);
+    color:rgba(255,255,255,0.7);
+    padding:28px 24px;
+    font-size:12.5px;
+    line-height:1.6;
+    text-align:center;
+  }
+  footer strong{color:#fff;}
 
-      .hero-image{
-        width:100%;
-        height:auto;
-      }
-    }
-  </style>
+  @media (max-width:600px){
+    .hero-top{padding:44px 18px 30px;}
+    .promo-grid{grid-template-columns:1fr;}
+  }
+
+  .hero-image{
+    display:block;
+    width:100%;
+    max-height:420px;
+    object-fit:cover;
+    object-position:center;
+  }
+  .hero-top{
+    padding-top:34px;
+  }
+  .cuotas-flag{
+    background:#fff;
+    border:1px solid rgba(227,6,19,.16);
+    border-radius:10px;
+    margin-left:0;
+    padding:8px 12px;
+    box-shadow:0 5px 14px rgba(0,0,0,.08);
+  }
+  .cuotas-flag .num{
+    color:var(--red);
+    font-size:1.65rem;
+  }
+  .cuotas-flag .txt{
+    color:var(--ink);
+  }
+  .promo-card{
+    padding:22px 20px 24px;
+  }
+  .chain-logo{
+    justify-content:center;
+    min-height:90px;
+    padding:4px 10px;
+  }
+  .chain-logo img{
+    max-height:82px;
+    width:auto;
+  }
+  .chain-logo.dark img{
+    max-height:82px;
+  }
+
+</style>
 </head>
-
 <body>
 
-  <!-- Banner superior amarillo con logo -->
-  <header class="top-banner">
-    <img src="logo.png" alt="Tarjeta Sucrédito">
-  </header>
+<header class="hero">
+  <img src="hero.png" alt="Promoción Sucrédito" class="hero-image">
+  <div class="hero-top">
+    <div class="hero-inner">
+      <img src="logo.png" alt="Sucrédito" class="brand-logo">
+    </div>
+  </div>
 
-  <!-- ÚNICO contenido visual: hero completo -->
-  <main class="hero">
-    <img
-      src="hero.jpg"
-      alt="Promoción Sucrédito - Farmacia favorita"
-      class="hero-image"
-    >
-  </main>
+  <div class="selector-wrap">
+    <div class="selector-label">Elegí tu provincia</div>
+    <div class="prov-tabs" id="provTabs"></div>
+  </div>
+</header>
+
+<main>
+  <div class="province-heading">
+    <h2 id="provTitle">—</h2>
+    <span class="sub" id="provSub"></span>
+  </div>
+  <div class="promo-grid" id="promoGrid"></div>
+</main>
+
+<footer>
+  Tarjeta Sucrédito propiedad de Valle Fértil S.A, Cuit 30-68570941-0 — San Martín 836, San Miguel de Tucumán.<br>
+  *CFT (Costo Financiero Total) 0,0% — TNA (Tasa Nominal Anual) 0,0%. Promociones válidas en comercios adheridos.
+</footer>
+
+<script>
+const LOGOS = {
+  laesquina: "la_esquina.png",
+  farmar: "farmar.png",
+  farmacity: "farmacity.png",
+  sanfrancisco: "san_francisco.png",
+  sudamericana: "sudamericana.png",
+  delpueblo: "del_pueblo.png",
+  plazoleta: "plazoleta.png",
+  alvarado: "alvarado.png"
+};
+
+const DATA = {
+  SGO: {
+    name: "Santiago del Estero",
+    promos: [
+      { logo: LOGOS.laesquina, alt: "La Esquina", cuotas: "3 y 6", label: "cuotas sin interés" },
+      { logo: LOGOS.farmar, alt: "FARMAR", cuotas: "3", label: "cuotas sin interés" },
+      { logo: LOGOS.farmacity, alt: "Farmacity", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  },
+  JUJ: {
+    name: "Jujuy",
+    promos: [
+      { logo: LOGOS.sanfrancisco, alt: "San Francisco", cuotas: "3", label: "cuotas sin interés" },
+      { logo: LOGOS.farmacity, alt: "Farmacity", cuotas: "3", label: "cuotas sin interés" },
+      { logo: LOGOS.farmar, alt: "FARMAR", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  },
+  SAL: {
+    name: "Salta",
+    promos: [
+      { logo: LOGOS.sudamericana, alt: "Sudamericana", cuotas: "3", label: "cuotas sin interés" },
+      { logo: LOGOS.farmacity, alt: "Farmacity", cuotas: "3", label: "cuotas sin interés" },
+      { logo: LOGOS.farmar, alt: "FARMAR", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  },
+  TUC: {
+    name: "Tucumán",
+    promos: [
+      { logo: LOGOS.delpueblo, alt: "Del Pueblo", cuotas: "3, 6 y 9", label: "cuotas sin interés" },
+      { logo: LOGOS.plazoleta, alt: "Plazoleta", cuotas: "3 y 5", label: "cuotas sin interés" },
+      { logo: LOGOS.farmar, alt: "FARMAR", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  },
+  COR: {
+    name: "Córdoba",
+    promos: [
+      { logo: LOGOS.farmacity, alt: "Farmacity", cuotas: "3", label: "cuotas sin interés" },
+      { logo: LOGOS.farmar, alt: "FARMAR", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  },
+  SJU: {
+    name: "San Pedro de Jujuy",
+    promos: [
+      { logo: LOGOS.farmar, alt: "FARMAR", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  },
+  ORA: {
+    name: "Orán",
+    promos: [
+      { logo: LOGOS.alvarado, alt: "Alvarado", cuotas: "3", label: "cuotas sin interés" }
+    ]
+  }
+};
+
+const tabsEl = document.getElementById('provTabs');
+const gridEl = document.getElementById('promoGrid');
+const titleEl = document.getElementById('provTitle');
+const subEl = document.getElementById('provSub');
+
+function render(key){
+  const prov = DATA[key];
+  titleEl.textContent = prov.name;
+  subEl.textContent = prov.promos.length + (prov.promos.length === 1 ? " comercio adherido" : " comercios adheridos");
+
+  gridEl.innerHTML = '';
+  prov.promos.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'promo-card';
+    card.innerHTML = `
+      <span class="cuotas-flag"><span class="num">${p.cuotas}</span><span class="txt">${p.label}</span></span>
+      <div class="chain-logo${p.darkLogo ? ' dark' : ''}">
+        <img src="${p.logo}" alt="${p.alt}">
+      </div>
+    `;
+    gridEl.appendChild(card);
+  });
+
+  document.querySelectorAll('.prov-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.key === key);
+  });
+
+  history.replaceState(null, '', '#' + key.toLowerCase());
+}
+
+Object.keys(DATA).forEach(key => {
+  const btn = document.createElement('button');
+  btn.className = 'prov-tab';
+  btn.dataset.key = key;
+  btn.innerHTML = DATA[key].name + ` <span class="count">${DATA[key].promos.length}</span>`;
+  btn.addEventListener('click', () => render(key));
+  tabsEl.appendChild(btn);
+});
+
+const hashKey = location.hash.replace('#','').toUpperCase();
+render(DATA[hashKey] ? hashKey : 'TUC');
+</script>
+
+  <!-- Cloudflare Web Analytics -->
+<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e4bff5fb0b1c42b996c14cf19bf481b9"}'></script>
+<!-- End Cloudflare Web Analytics -->
 
 </body>
 </html>
