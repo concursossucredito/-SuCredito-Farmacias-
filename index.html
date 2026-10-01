@@ -247,14 +247,17 @@
   @media (max-width:600px){
     .hero-top{padding:44px 18px 30px;}
     .promo-grid{grid-template-columns:1fr;}
+    .hero-image{width:100%;height:auto;max-height:none;object-fit:contain;}
   }
 
   .hero-image{
     display:block;
-    width:100%;
-    max-height:420px;
-    object-fit:cover;
+    width:min(100%,1080px);
+    height:auto;
+    max-height:none;
+    object-fit:contain;
     object-position:center;
+    margin:0 auto;
   }
   .hero-top{
     padding-top:34px;
@@ -290,17 +293,47 @@
     max-height:82px;
   }
 
+
+  /* ---------- ENTRADA DEL LOGO ---------- */
+  .intro-logo{
+    position:fixed;
+    left:50%;
+    top:50%;
+    width:min(360px,72vw);
+    height:auto;
+    transform:translate(-50%,-50%) scale(1.15);
+    z-index:9999;
+    pointer-events:none;
+    opacity:1;
+    transition:transform .9s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+  }
+  body.intro-active{overflow:hidden;}
+  body.intro-active > .hero,
+  body.intro-active > main,
+  body.intro-active > footer{opacity:0;}
+  body.intro-ready > .hero,
+  body.intro-ready > main,
+  body.intro-ready > footer{opacity:1; transition:opacity .35s ease;}
+  .intro-logo.hide{
+    transform:translate(calc(-50% - 0px), calc(-50% - 42vh)) scale(.145);
+    opacity:0;
+  }
+
 </style>
 </head>
 <body>
 
+<div class="intro-logo" id="introLogo" aria-hidden="true">
+  <img src="logo.png" alt="">
+</div>
+
 <header class="hero">
-  <img src="hero.png" alt="Promoción Sucrédito" class="hero-image">
   <div class="hero-top">
     <div class="hero-inner">
       <img src="logo.png" alt="Sucrédito" class="brand-logo">
     </div>
   </div>
+  <img src="hero.png" alt="Promoción Sucrédito" class="hero-image">
 
   <div class="selector-wrap">
     <div class="selector-label">Elegí tu provincia</div>
@@ -428,6 +461,35 @@ Object.keys(DATA).forEach(key => {
 
 const hashKey = location.hash.replace('#','').toUpperCase();
 render(DATA[hashKey] ? hashKey : 'TUC');
+</script>
+
+
+<script>
+(function(){
+  document.body.classList.add('intro-active');
+  const intro = document.getElementById('introLogo');
+  if(!intro) return;
+
+  const logo = intro.querySelector('img');
+  const finish = () => {
+    intro.remove();
+    document.body.classList.remove('intro-active');
+    document.body.classList.add('intro-ready');
+  };
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    finish();
+    return;
+  }
+
+  // Primero queda visible en el centro y luego se reduce hacia el banner superior.
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      intro.classList.add('hide');
+      setTimeout(finish, 900);
+    }, 500);
+  });
+})();
 </script>
 
   <!-- Cloudflare Web Analytics -->
