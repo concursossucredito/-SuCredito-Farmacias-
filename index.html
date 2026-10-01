@@ -301,11 +301,18 @@
     top:50%;
     width:min(360px,72vw);
     height:auto;
-    transform:translate(-50%,-50%) scale(1.15);
+    transform:translate(-50%,-50%) scale(1.08);
+    transform-origin:center center;
     z-index:9999;
     pointer-events:none;
     opacity:1;
-    transition:transform .9s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+    will-change:transform;
+    transition:transform .95s cubic-bezier(.22,1,.36,1);
+  }
+  .intro-logo img{
+    display:block;
+    width:100%;
+    height:auto;
   }
   body.intro-active{overflow:hidden;}
   body.intro-active > .hero,
@@ -313,10 +320,10 @@
   body.intro-active > footer{opacity:0;}
   body.intro-ready > .hero,
   body.intro-ready > main,
-  body.intro-ready > footer{opacity:1; transition:opacity .35s ease;}
+  body.intro-ready > footer{opacity:1; transition:opacity .3s ease;}
+  /* El logo termina alineado con el logo real del encabezado. */
   .intro-logo.hide{
-    transform:translate(calc(-50% - 0px), calc(-50% - 42vh)) scale(.145);
-    opacity:0;
+    transform:translate(-50%, calc(-50vh + 60px)) scale(.145);
   }
 
 </style>
@@ -482,12 +489,13 @@ render(DATA[hashKey] ? hashKey : 'TUC');
     return;
   }
 
-  // Primero queda visible en el centro y luego se reduce hacia el banner superior.
+  // Se muestra centrado, espera un instante y luego viaja hasta el logo del encabezado.
+  // La página aparece al terminar el movimiento para evitar un salto visual.
   requestAnimationFrame(() => {
     setTimeout(() => {
       intro.classList.add('hide');
-      setTimeout(finish, 900);
-    }, 500);
+      setTimeout(finish, 950);
+    }, 650);
   });
 })();
 </script>
